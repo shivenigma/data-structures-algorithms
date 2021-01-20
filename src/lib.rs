@@ -1,4 +1,5 @@
 mod ds {
+
     #[derive(PartialEq)]
     pub struct Array<T> {
         pub length: usize,
@@ -10,15 +11,30 @@ mod ds {
             return Array { length, data};
         }
         pub fn push(&mut self, elem: T) {
+            self.data.push(elem);
+            self.calculate_length();
         }
         pub fn pop(&mut self) {
+            self.data.pop();
+            self.calculate_length();
         }
         pub fn get_element(&self, index: usize)-> &T {
             return &self.data[index];
         }
-        pub fn insert_at(&mut self, index: usize, elem: T) {
+        pub fn insert_at(&mut self, index: usize, new_element: T) {
+            let mut data: Vec<T> = vec![];
+            for (position, &element) in self.data.iter().enumerate() {
+                if position == index {
+                    data.push(new_element);
+                }
+                data.push(element);
+            }
+            self.data = data;
         }
         pub fn delete_at(&mut self, index: usize){
+        }
+        fn calculate_length(&mut self) {
+            self.length = self.data.len();
         }
 
     }
@@ -31,7 +47,8 @@ mod ds_tests {
         let data: Vec<i32> = vec![];
         let mut arr = ds::Array::new(0, data);
         arr.push(8);
-        assert_eq!(arr.length, 1);
+        arr.push(18);
+        assert_eq!(arr.length, 2);
     }
     #[test]
     fn remove_element_from_array() {
