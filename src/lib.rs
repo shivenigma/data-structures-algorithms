@@ -1,12 +1,9 @@
 mod ds {
-
-    #[derive(PartialEq)]
     pub struct Array<T> {
         pub length: usize,
         data: Vec<T>,
     }
-
-    impl<T> Array<T> {
+    impl<T: Clone> Array<T> {
         pub fn new(length: usize, data: Vec<T>)-> Array<T> {
             return Array { length, data};
         }
@@ -23,15 +20,24 @@ mod ds {
         }
         pub fn insert_at(&mut self, index: usize, new_element: T) {
             let mut data: Vec<T> = vec![];
-            for (position, &element) in self.data.iter().enumerate() {
+            for (position, element) in self.data.iter().enumerate() {
                 if position == index {
-                    data.push(new_element);
+                    data.push(new_element.clone());
                 }
-                data.push(element);
+                data.push(element.clone());
             }
             self.data = data;
+            self.calculate_length();
         }
         pub fn delete_at(&mut self, index: usize){
+            let mut data: Vec<T> = vec![];
+            for (position, elem) in self.data.iter().enumerate() {
+                if position != index {
+                    data.push(elem.clone());
+                }
+            }
+            self.data = data;
+            self.calculate_length();
         }
         fn calculate_length(&mut self) {
             self.length = self.data.len();
