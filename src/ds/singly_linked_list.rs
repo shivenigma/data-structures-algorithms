@@ -1,16 +1,29 @@
+use std::mem;
+struct Node<T> {
+    value: T,
+    next: Option<Box<Node<T>>>,
+}
 pub struct SinglyLinkedList<T> {
-    value: Box<T>,
-    next: Option<Box<T>>
+    pub head: Option<Node<T>>
 }
 impl<T> SinglyLinkedList<T> {
-    pub fn new(element: T) -> SinglyLinkedList<T> {
-        return SinglyLinkedList {
-            value: Box::new(element),
-            next: None
+    pub fn new() -> SinglyLinkedList<T> {
+        // Creating new node with empty values, should not take up any memory as per my understanding.
+        SinglyLinkedList {
+            head: None
         }
     }
-    pub fn push_front(&self, element: T) {
-        unimplemented!();
+    pub fn push_front(&mut self, element: T) {
+        let next = None;
+        if !self.is_empty() {
+            println!("not empty not empty not empty not emptynot emptynot emptynot emptynot emptynot emptynot empty");
+            next = self.head;
+        }
+        let new_node: Node<T> = Node {
+            value: element,
+            next: Some(Box::new(next))
+        };
+        self.head = Some(new_node);
     }
     pub fn pop_front(&self) -> T {
         unimplemented!();
@@ -35,7 +48,10 @@ impl<T> SinglyLinkedList<T> {
     pub fn erase(&self, element: T){
     }
     pub fn is_empty(&self)-> bool {
-        unimplemented!();
+       match self.head {
+           Some(x) => return false,
+           None => return true,
+       }
     }
 }
 
@@ -44,7 +60,7 @@ mod tests {
     use super::SinglyLinkedList;
     #[test]
     fn check_if_list_empty() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(5);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         assert_eq!(list.is_empty(), false);
         let elem = list.pop_front();
         assert_eq!(elem, 5);
@@ -57,7 +73,7 @@ mod tests {
     }
     #[test]
     fn add_element_at_front() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(5);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_front(7);
         assert_eq!(list.pop_front(), 7);
         list.push_front(6);
@@ -65,7 +81,7 @@ mod tests {
     }
     #[test]
     fn remove_element_from_front() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(6);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_back(4);
         list.push_front(3);
         assert_eq!(list.pop_front(), 3);
@@ -76,7 +92,7 @@ mod tests {
     }
     #[test]
     fn get_the_first_element() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(6);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_front(3);
         assert_eq!(list.top_front(), 3);
         list.push_back(4);
@@ -85,7 +101,7 @@ mod tests {
     }
     #[test]
     fn add_elements_at_back() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(3);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_back(4);
         assert_eq!(list.pop_back(), 4);
         assert_eq!(list.pop_back(), 3);
@@ -94,7 +110,7 @@ mod tests {
     }
     #[test]
     fn remove_elements_from_back() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(8);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_back(3);
         assert_eq!(list.pop_back(), 3);
         assert_eq!(list.pop_back(), 8);
@@ -104,7 +120,7 @@ mod tests {
     }
     #[test]
     fn get_last_element(){
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(6);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_front(3);
         assert_eq!(list.top_back(), 3);
         list.pop_back();
@@ -115,7 +131,7 @@ mod tests {
     }
     #[test]
     fn add_before_the_element() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(3);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         let elem = list.top_front();
         list.add_before(elem, 8);
         let elem1 = list.top_front();
@@ -125,7 +141,7 @@ mod tests {
     }
     #[test]
     fn add_after_the_element() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(5);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_back(3);
         let elem = list.top_back();
         list.add_after(elem, 6);
@@ -136,7 +152,7 @@ mod tests {
     }
     #[test]
     fn find_the_element() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(35);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_back(3);
         list.push_back(8);
         // Todo: Confirm if find should return value or index or a boolean.
@@ -144,7 +160,7 @@ mod tests {
     }
     #[test]
     fn delete_element() {
-        let list: SinglyLinkedList<i8> = SinglyLinkedList::new(66);
+        let list: SinglyLinkedList<i8> = SinglyLinkedList::new();
         list.push_back(5);
         list.push_back(3);
         list.erase(3);
